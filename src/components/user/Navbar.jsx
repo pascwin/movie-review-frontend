@@ -5,8 +5,7 @@ export const Navbar = () => {
     <div className="bg-secondary shadow-sm shadow-gray-500">
       <Container className="p-2">
         <div className="flex justify-between items-center">
-          <img src="./logo.png" alt="" className="h-10" />
-
+        <img src="./logo.png" alt="" className="h-10" />
           <ul className="flex items-center space-x-4">
             <li>
               <button className="bg-dark-subtle p-1 rounded">
