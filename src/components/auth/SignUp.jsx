@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { commonModalClasses } from "../../utils/theme";
 import { Container } from "../Container";
 import { FormInput } from "../form/FormInput";
@@ -33,6 +34,8 @@ export const SignUp = () => {
     password: "",
   });
 
+  const navigate = useNavigate();
+
   const { name, email, password } = userInfo;
 
   const handleChange = ({ target }) => {
@@ -48,6 +51,11 @@ export const SignUp = () => {
     if (!ok) return console.log(error);
     const response = await createUser(userInfo);
     if (response.error) return console.log(response.error);
+    navigate("/auth/verification", {
+      state: { user: response.user },
+      //replace blocks the user to go back to previous page
+      replace: true,
+    });
     console.log(response.user);
   };
 
