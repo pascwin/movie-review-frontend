@@ -6,6 +6,7 @@ import { Submit } from "../form/Submit";
 import { Title } from "../form/Title";
 import { CustomLink } from "../CustomLink";
 import { FormContainer } from "../form/FormContainer";
+import { createUser } from "../../api/auth";
 
 const validateUserInfo = ({ name, email, password }) => {
   const isValidEmail =
@@ -41,11 +42,13 @@ export const SignUp = () => {
     });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const { ok, error } = validateUserInfo(userInfo);
     if (!ok) return console.log(error);
-    console.log(userInfo)
+    const response = await createUser(userInfo);
+    if (response.error) return console.log(response.error);
+    console.log(response.user);
   };
 
   return (
