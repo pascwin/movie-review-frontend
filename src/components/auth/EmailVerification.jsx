@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { verifyUserEmail } from "../../api/auth";
+import { useNotification } from "../../hooks";
 import { commonModalClasses } from "../../utils/theme";
 import { Container } from "../Container";
 import { FormContainer } from "../form/FormContainer";
@@ -27,6 +28,7 @@ export const EmailVerification = () => {
   const [activeOtpIndex, setActiveOtpIndex] = useState(0);
 
   const inputRef = useRef();
+  const { updateNotification } = useNotification();
 
   //this is the state we get from useNavigate
   const { state } = useLocation();
@@ -73,16 +75,16 @@ export const EmailVerification = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!isValidOTP(otp)) return console.log("OTP not valid");
+    if (!isValidOTP(otp)) console.log("OTP not valid");
 
     const { error, message } = await verifyUserEmail({
       userId: user.id,
       OTP: otp.join(""),
     });
 
-    if (error) return console.log(error);
+    if (error) return updateNotification("error", error);
 
-    console.log(message);
+    updateNotification("success", message);
   };
 
   console.log(user);
