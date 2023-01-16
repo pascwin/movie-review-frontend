@@ -1,7 +1,7 @@
-import React, { createContext } from "react";
+import React, { createContext, useState } from "react";
 import { signInUser } from "../api/auth";
 
-const Authcontext = createContext();
+export const AuthContext = createContext();
 
 const defaultAuthInfo = {
   profile: null,
@@ -11,7 +11,7 @@ const defaultAuthInfo = {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [authInfo, setAuthInfo] = useStat({ ...defaultAuthInfo });
+  const [authInfo, setAuthInfo] = useState({ ...defaultAuthInfo });
 
   const handleLogin = async (email, password) => {
     setAuthInfo({ ...authInfo, isPending: true });
@@ -26,21 +26,21 @@ export const AuthProvider = ({ children }) => {
       isLoggedIn: true,
     });
     // we will use this auth token to fetch our user from the backend api
-    localStorage.setItem("auth-token", user.token)
+    localStorage.setItem("auth-token", user.token);
   };
 
   const handleLogout = () => {
-    console.log("logout")
-  }
+    console.log("logout");
+  };
 
   const isAuth = () => {
-    return authInfo.isLoggedIn
-  }
+    return authInfo.isLoggedIn;
+  };
 
   return (
-    <Authcontext.Provider
+    <AuthContext.Provider
       value={{ authInfo, handleLogin, handleLogout, isAuth }}>
       {children}
-    </Authcontext.Provider>
+    </AuthContext.Provider>
   );
 };
