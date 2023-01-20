@@ -6,7 +6,7 @@ import { useAuth } from "../../hooks";
 
 export const Navbar = () => {
   const { toggleTheme } = useTheme();
-  const { authInfo } = useAuth();
+  const { authInfo, handleLogout } = useAuth();
   const { isLoggedIn } = authInfo;
   return (
     <div className="bg-secondary shadow-sm shadow-gray-500">
@@ -32,7 +32,11 @@ export const Navbar = () => {
             </li>
             <li>
               {isLoggedIn ? (
-                <button>Logout</button>
+                <button
+                  onClick={handleLogout}
+                  className="text-white font-semibold text-lg">
+                  Logout
+                </button>
               ) : (
                 <Link
                   className="text-white font-semibold text-lg"

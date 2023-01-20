@@ -30,7 +30,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const handleLogout = () => {
-    console.log("logout");
+    localStorage.removeItem("auth-token");
+    setAuthInfo({ ...defaultAuthInfo });
   };
 
   const isAuth = async () => {
@@ -51,8 +52,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    isAuth()
-  }, [])
+    isAuth();
+  }, []);
 
   return (
     <AuthContext.Provider
