@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { commonModalClasses } from "../../utils/theme";
 import { Container } from "../Container";
@@ -9,6 +9,7 @@ import { CustomLink } from "../CustomLink";
 import { FormContainer } from "../form/FormContainer";
 import { createUser } from "../../api/auth";
 import { useNotification } from "../../hooks";
+import { useAuth } from "../../hooks";
 
 const validateUserInfo = ({ name, email, password }) => {
   const isValidEmail =
@@ -38,6 +39,12 @@ export const SignUp = () => {
   const navigate = useNavigate();
 
   const { updateNotification } = useNotification();
+  const { authInfo } = useAuth();
+  const { isLoggedIn } = authInfo;
+
+  useEffect(() => {
+    if (isLoggedIn) navigate("/");
+  }, [isLoggedIn]);
 
   const handleChange = ({ target }) => {
     const { value, name } = target;
@@ -49,7 +56,7 @@ export const SignUp = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { ok, error } = validateUserInfo(userInfo);
-    if (!ok) return updateNotification("error", error)
+    if (!ok) return updateNotification("error", error);
     const response = await createUser(userInfo);
     if (response.error) return console.log(response.error);
     navigate("/auth/verification", {

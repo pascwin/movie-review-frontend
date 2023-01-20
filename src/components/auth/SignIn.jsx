@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth, useNotification } from "../../hooks";
 import { commonModalClasses } from "../../utils/theme";
@@ -32,9 +32,11 @@ export const SignIn = () => {
   const navigate = useNavigate();
   const { updateNotification } = useNotification();
   const { handleLogin, authInfo } = useAuth();
-  const {isPending} = authInfo
+  const { isPending, isLoggedIn } = authInfo;
   
-  console.log(authInfo)
+  useEffect(() => {
+    if(isLoggedIn) navigate("/")
+  }, [isLoggedIn])
 
   const handleChange = ({ target }) => {
     const { value, name } = target;
@@ -48,7 +50,7 @@ export const SignIn = () => {
     const { ok, error } = validateUserInfo(userInfo);
 
     if (!ok) return updateNotification("error", error);
-    handleLogin(userInfo.email, userInfo.password)
+    handleLogin(userInfo.email, userInfo.password);
   };
 
   return (
@@ -72,7 +74,7 @@ export const SignIn = () => {
             label="Password"
             type="password"
           />
-          <Submit value="Sign in" busy={isPending}/>
+          <Submit value="Sign in" busy={isPending} />
           <div className="flex justify-between">
             <CustomLink to="/auth/forget-password">Forget password</CustomLink>
             <CustomLink to="/auth/signup">Sign up</CustomLink>
