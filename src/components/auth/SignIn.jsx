@@ -36,7 +36,7 @@ export const SignIn = () => {
   
   useEffect(() => {
     if(isLoggedIn) navigate("/")
-  }, [isLoggedIn])
+  }, [isLoggedIn, navigate])
 
   const handleChange = ({ target }) => {
     const { value, name } = target;
@@ -53,6 +53,7 @@ export const SignIn = () => {
     handleLogin(userInfo.email, userInfo.password);
   };
 
+  console.log(isLoggedIn, "test")
   return (
     <FormContainer>
       <Container>
