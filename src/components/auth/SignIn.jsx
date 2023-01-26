@@ -8,13 +8,11 @@ import { FormContainer } from "../form/FormContainer";
 import { FormInput } from "../form/FormInput";
 import { Submit } from "../form/Submit";
 import { Title } from "../form/Title";
+import { isValidEmail } from "../../utils/helper";
 
-const validateUserInfo = ({ name, email, password }) => {
-  const isValidEmail =
-    /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/;
-
+const validateUserInfo = ({ email, password }) => {
   if (!email.trim()) return { ok: false, error: "Email is missing" };
-  if (!isValidEmail.test(email)) return { ok: false, error: "Invalid email" };
+  if (!isValidEmail(email)) return { ok: false, error: "Invalid email" };
 
   if (!password.trim()) return { ok: false, error: "Password is missing" };
   if (password.length < 8)
@@ -53,7 +51,6 @@ export const SignIn = () => {
     handleLogin(userInfo.email, userInfo.password);
   };
 
-  console.log(isLoggedIn, "test")
   return (
     <FormContainer>
       <Container>

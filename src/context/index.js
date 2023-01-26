@@ -5,10 +5,11 @@ import { ThemeProvider } from "./theme-provider";
 
 export const ContextProvider = ({ children }) => {
   return (
-    <AuthProvider>
-      <NotificationProvider>
+    //Der innere Provider hat Zugriff auf den äußeren
+    <NotificationProvider>
+      <AuthProvider>
         <ThemeProvider>{children}</ThemeProvider>
-      </NotificationProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </NotificationProvider>
   );
 };

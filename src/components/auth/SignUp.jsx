@@ -10,10 +10,9 @@ import { FormContainer } from "../form/FormContainer";
 import { createUser } from "../../api/auth";
 import { useNotification } from "../../hooks";
 import { useAuth } from "../../hooks";
+import { isValidEmail } from "../../utils/helper";
 
 const validateUserInfo = ({ name, email, password }) => {
-  const isValidEmail =
-    /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/;
   const isValidName = /^[a-z A-Z]+$/;
 
   if (!name.trim()) return { ok: false, error: "Name is missing" };
@@ -44,7 +43,7 @@ export const SignUp = () => {
 
   useEffect(() => {
     if (isLoggedIn) navigate("/");
-  }, [isLoggedIn]);
+  }, [isLoggedIn, navigate]);
 
   const handleChange = ({ target }) => {
     const { value, name } = target;

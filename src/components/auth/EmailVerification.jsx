@@ -78,7 +78,6 @@ export const EmailVerification = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(otp, "check input otp")
     if (!isValidOTP(otp)) return updateNotification("error", "invalid OTP");
 
     const {
@@ -97,7 +96,6 @@ export const EmailVerification = () => {
     isAuth();
   };
 
-  console.log(user);
   return (
     <FormContainer>
       <Container>

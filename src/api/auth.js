@@ -40,18 +40,57 @@ export const signInUser = async (userInfo) => {
 };
 
 export const getIsAuth = async (token) => {
-    try {
-      const { data } = await client.get("/user/is-auth", {
-        headers: {
-            Authorization: "Bearer " + token,
-            accept: "application.json"
-        }
-      });
-      return data;
-    } catch (error) {
-      const { response } = error;
-      console.log(error);
-      if (response?.data) return response.data;
-      return { error: error.message || error };
-    }
-  };
+  try {
+    const { data } = await client.get("/user/is-auth", {
+      headers: {
+        Authorization: "Bearer " + token,
+        accept: "application.json",
+      },
+    });
+    return data;
+  } catch (error) {
+    const { response } = error;
+    console.log(error);
+    if (response?.data) return response.data;
+    return { error: error.message || error };
+  }
+};
+
+export const forgetPassword = async (email) => {
+  try {
+    const { data } = await client.post("/user/forget-password", { email });
+    return data;
+  } catch (error) {
+    const { response } = error;
+    console.log(error);
+    if (response?.data) return response.data;
+    return { error: error.message || error };
+  }
+};
+
+export const verifyPasswordResetToken = async (token, userId) => {
+  try {
+    const { data } = await client.post("/user/verify-password-reset-token", {
+      token,
+      userId,
+    });
+    return data;
+  } catch (error) {
+    const { response } = error;
+    console.log(error);
+    if (response?.data) return response.data;
+    return { error: error.message || error };
+  }
+};
+
+export const resetPassword = async (passwordInfo) => {
+  try {
+    const { data } = await client.post("/user/reset-password", passwordInfo);
+    return data;
+  } catch (error) {
+    const { response } = error;
+    console.log(error);
+    if (response?.data) return response.data;
+    return { error: error.message || error };
+  }
+};
