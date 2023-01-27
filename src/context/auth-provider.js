@@ -59,6 +59,8 @@ export const AuthProvider = ({ children }) => {
     isAuth();
   }, []);
 
+  console.log(authInfo)
+
   return (
     <AuthContext.Provider
       value={{ authInfo, handleLogin, handleLogout, isAuth }}>

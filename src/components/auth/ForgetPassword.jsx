@@ -27,7 +27,6 @@ export const ForgetPassword = () => {
   const handleChange = ({ target }) => {
     const { value } = target;
     setEmail(value);
-    console.log(value);
   };
 
   const handleSubmit = async (event) => {
