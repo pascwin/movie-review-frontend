@@ -1,4 +1,5 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getIsAuth, signInUser } from "../api/auth";
 import { useNotification } from "../hooks";
 
@@ -14,6 +15,7 @@ const defaultAuthInfo = {
 export const AuthProvider = ({ children }) => {
   const [authInfo, setAuthInfo] = useState({ ...defaultAuthInfo });
   const { updateNotification } = useNotification();
+  const navigate = useNavigate();
 
   const handleLogin = async (email, password) => {
     setAuthInfo({ ...authInfo, isPending: true });
@@ -37,15 +39,17 @@ export const AuthProvider = ({ children }) => {
     setAuthInfo({ ...defaultAuthInfo });
   };
 
-  const isAuth = async () => {
+  const isAuth = useCallback(async () => {
     const token = localStorage.getItem("auth-token");
     if (!token) return;
     const { error, user } = await getIsAuth(token);
 
     if (error) {
       updateNotification("error", error);
-      return setAuthInfo({ ...authInfo, istPending: false, error });
+      return setAuthInfo((a) => ({ ...a, istPending: false, error }));
     }
+
+    navigate("/", { replace: true });
 
     setAuthInfo({
       profile: { ...user },
@@ -53,13 +57,13 @@ export const AuthProvider = ({ children }) => {
       isPending: false,
       error: "",
     });
-  };
+  }, [navigate, updateNotification]);
 
   useEffect(() => {
     isAuth();
-  }, []);
+  }, [isAuth, authInfo.isLoggedIn]);
 
-  console.log(authInfo)
+  console.log(authInfo);
 
   return (
     <AuthContext.Provider

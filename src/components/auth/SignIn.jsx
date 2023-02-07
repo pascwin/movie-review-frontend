@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import { useAuth, useNotification } from "../../hooks";
 import { commonModalClasses } from "../../utils/theme";
 import { Container } from "../Container";
@@ -27,14 +26,9 @@ export const SignIn = () => {
     password: "",
   });
 
-  const navigate = useNavigate();
   const { updateNotification } = useNotification();
   const { handleLogin, authInfo } = useAuth();
-  const { isPending, isLoggedIn } = authInfo;
-  
-  useEffect(() => {
-    if(isLoggedIn) navigate("/")
-  }, [isLoggedIn, navigate])
+  const { isPending } = authInfo;
 
   const handleChange = ({ target }) => {
     const { value, name } = target;
