@@ -14,6 +14,7 @@ const defaultAuthInfo = {
 
 export const AuthProvider = ({ children }) => {
   const [authInfo, setAuthInfo] = useState({ ...defaultAuthInfo });
+  const [alreadyLoggedIn, setAlreadyLoggedIn] = useState(false);
   const { updateNotification } = useNotification();
   const navigate = useNavigate();
 
@@ -37,6 +38,7 @@ export const AuthProvider = ({ children }) => {
   const handleLogout = () => {
     localStorage.removeItem("auth-token");
     setAuthInfo({ ...defaultAuthInfo });
+    setAlreadyLoggedIn(false)
   };
 
   const isAuth = useCallback(async () => {
@@ -48,8 +50,10 @@ export const AuthProvider = ({ children }) => {
       updateNotification("error", error);
       return setAuthInfo((a) => ({ ...a, istPending: false, error }));
     }
-
-    navigate("/", { replace: true });
+    if (!alreadyLoggedIn) {
+      setAlreadyLoggedIn(true);
+      navigate("/", { replace: true });
+    }
 
     setAuthInfo({
       profile: { ...user },
@@ -57,13 +61,11 @@ export const AuthProvider = ({ children }) => {
       isPending: false,
       error: "",
     });
-  }, [navigate, updateNotification]);
+  }, [updateNotification, alreadyLoggedIn, navigate]);
 
   useEffect(() => {
     isAuth();
   }, [isAuth, authInfo.isLoggedIn]);
-
-  console.log(authInfo);
 
   return (
     <AuthContext.Provider
