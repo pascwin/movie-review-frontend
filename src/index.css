@@ -1,24 +1,58 @@
 /*Remove Arrows/Spinners*/
+
+
 /* Chrome, Safari, Edge, Opera */
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .bounce-custom {
-  animation: bounce-custom 0.5s;
-}
-@keyframes bounce-custom {
-  from, to { transform: scale(1, 1); }
-  25% { transform: scale(0.9, 1.1); }
-  50% { transform: scale(1.1, 0.9); }
-  75% { transform: scale(0.95, 1.05); }
+    animation: bounce-custom 0.5s;
 }
 
+@keyframes bounce-custom {
+    from,
+    to {
+        transform: scale(1, 1);
+    }
+    25% {
+        transform: scale(0.9, 1.1);
+    }
+    50% {
+        transform: scale(1.1, 0.9);
+    }
+    75% {
+        transform: scale(0.95, 1.05);
+    }
+}
+
+.animate-scale {
+    transform-origin: 0% 0%;
+    animation: scale 0.2s;
+}
+
+.animate-scale-reverse {
+    transform-origin: 0% 0%;
+    animation: scale 0.2s reverse forwards;
+}
+
+@keyframes scale {
+    0% {
+        transform: scaleY(0);
+    }
+    100% {
+        transform: scaleY(1);
+    }
+}
+
+
 /* Firefox */
+
 input[type=number] {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
 
 @tailwind base;
