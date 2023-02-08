@@ -4,8 +4,10 @@ import { AiOutlineHome } from "react-icons/ai";
 import { BiMoviePlay } from "react-icons/bi";
 import { FaUserNinja } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
+import { useAuth } from "../../hooks";
 
 export const Navbar = () => {
+  const { handleLogout } = useAuth();
   //h-screen -> height of the screen
   return (
     <nav className="w-48 min-h-screen bg-secondary border-r border-gray-300">
@@ -37,7 +39,9 @@ export const Navbar = () => {
         </ul>
         <div className="flex flex-col items-start text-white pb-5">
           <span className="font-semibold text-white text-xl">Admin</span>
-          <button className="flex items-center text-dark-subtle text-sm hover:text-white transition space-x-0">
+          <button
+            onClick={handleLogout}
+            className="flex items-center text-dark-subtle text-sm hover:text-white transition space-x-0">
             <FiLogOut />
             <span>Logout</span>
           </button>
