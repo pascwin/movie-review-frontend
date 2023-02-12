@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ImSpinner3 } from "react-icons/im";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { resetPassword, verifyPasswordResetToken } from "../../api/auth";
@@ -24,7 +24,7 @@ export const ConfirmPassword = () => {
   const { updateNotification } = useNotification();
   const navigate = useNavigate();
 
-  const isValidToken = async () => {
+  const isValidToken = useCallback(async () => {
     const { error, valid } = await verifyPasswordResetToken(token, id);
     setIsVerifying(false);
     if (error) {
@@ -37,11 +37,12 @@ export const ConfirmPassword = () => {
       return navigate("/auth/reset-password", { replace: true });
     }
     setIsValid(true);
-  };
+  }, [id, navigate, token, updateNotification]);
 
   useEffect(() => {
     isValidToken();
-  }, []);
+    console.log("test");
+  }, [isValidToken]);
 
   const handleChange = ({ target }) => {
     const { name, value } = target;

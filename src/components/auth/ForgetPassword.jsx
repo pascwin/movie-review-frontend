@@ -17,8 +17,8 @@ export const ForgetPassword = () => {
 
   const navigate = useNavigate();
   const { updateNotification } = useNotification();
-  const { handleLogin, authInfo } = useAuth();
-  const { isPending, isLoggedIn } = authInfo;
+  const { authInfo } = useAuth();
+  const { isLoggedIn } = authInfo;
 
   useEffect(() => {
     if (isLoggedIn) navigate("/");
