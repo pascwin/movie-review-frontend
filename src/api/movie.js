@@ -9,10 +9,12 @@ export const uploadTrailer = async (formData, onUploadProgress) => {
         "content-type": "multipart/form-data",
       },
       onUploadProgress: ({ loaded, total }) => {
-        if (onUploadProgress)
-          onUploadProgress(Math.floor((loaded / total) * 100));
+        if (onUploadProgress) console.log("hello1");
+        onUploadProgress(Math.floor((loaded / total) * 100));
       },
     });
+    console.log("hello2");
+    console.log(data, "hello3")
     return data;
   } catch (error) {
     const { response } = error;

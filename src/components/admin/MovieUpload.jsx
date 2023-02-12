@@ -6,15 +6,36 @@ import { useNotification } from "../../hooks";
 
 export const MovieUpload = () => {
   const [videoSelected, setVideoSelected] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0)
+  const [videoUploaded, setVideoUploaded] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [videoInfo, setVideoInfo] = useState({});
+  const [movieInfo, setMovieInfo] = useState({});
 
   const { updateNotification } = useNotification();
 
-  const handleChange = async (file) => {
+  const handleChange = (file) => {
     const formData = new FormData();
     formData.append("video", file);
-    const res = await uploadTrailer(formData, setUploadProgress);
-    console.log(res);
+
+    setVideoSelected(true);
+    handleUploadTrailer(formData);
+  };
+
+  const handleUploadTrailer = async (data) => {
+    const { error, url, public_id } = await uploadTrailer(
+      data,
+      setUploadProgress
+    );
+    if (error) return updateNotification("error", error);
+    setVideoUploaded(true);
+    console.log(url, public_id)
+    setVideoInfo({ url, public_id });
+  };
+
+  const getUploadProgressValue = () => {
+    if (!videoUploaded && uploadProgress >= 100) {
+      return "Processing";
+    }
   };
 
   const handleTypeError = (err) => {
@@ -25,10 +46,14 @@ export const MovieUpload = () => {
     <div
       className="fixed inset-0 dark:bg-white dark:bg-opacity-50 
       bg-primary bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
-      <div className="dark:bg-primary bg-white rounded w-[45rem] h-[40rem] overflow-auto">
-        <UploadProgress visible message={`upload progress ${uploadProgress}`} width={uploadProgress} />
+      <div className="dark:bg-primary bg-white rounded w-[45rem] h-[40rem] overflow-auto p-2">
+        <UploadProgress
+          visible={!videoUploaded && videoSelected}
+          message={getUploadProgressValue()}
+          width={uploadProgress}
+        />
         <TrailerSelector
-          visible={videoSelected}
+          visible={!videoSelected}
           onTypeError={handleTypeError}
           handleChange={handleChange}
         />
@@ -38,7 +63,7 @@ export const MovieUpload = () => {
 };
 
 const TrailerSelector = ({ visible, handleChange, onTypeError }) => {
-  if (visible) return null;
+  if (!visible) return null;
   return (
     <div className=" h-full flex items-center justify-center">
       <FileUploader
