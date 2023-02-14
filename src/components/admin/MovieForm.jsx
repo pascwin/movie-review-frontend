@@ -1,8 +1,8 @@
 import React from "react";
+import { commonInputClasses } from "../../utils/theme";
+import { LiveSearch } from "../LiveSearch";
 import { TagsInput } from "../TagsInput";
 
-export const commonInputClasses =
-  "w-full bg-transparent outline-none dark:border-dark-subtle border-light-subtle dark:focus:border-white focus:border-primary transition dark:text-white text-primary";
 export const MovieForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,8 +28,14 @@ export const MovieForm = () => {
             className={commonInputClasses + " border-b-2 resize-none h-24"}
             placeholder="Movie storyline..."></textarea>
         </div>
-
-        <TagsInput />
+        <div>
+            
+        </div>
+        <div>
+        <Label htmlFor="tags">Tags</Label>
+        <TagsInput name="tags" />
+        </div>
+        <LiveSearch />
       </div>
       <div className="w-[30%] h-5 bg-blue-400"></div>
     </form>
