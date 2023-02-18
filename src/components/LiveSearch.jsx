@@ -5,11 +5,12 @@ export const LiveSearch = ({
   value = "",
   placeholder = "",
   results = [],
+  name,
   resultContainerStyle,
   selectedResultStyle,
   inputStyle,
   renderItem = null,
-  onChange = null,
+  onChange = () => {},
   onSelect = null,
 }) => {
   const [displaySearch, setDisplaySearch] = useState(false);
@@ -29,7 +30,10 @@ export const LiveSearch = ({
   };
 
   const handleSelection = (selectedItem) => {
-    onSelect(selectedItem);
+    if (selectedItem) {
+      onSelect(selectedItem);
+      closeSearch();
+    }
   };
 
   const handleKeyDown = ({ key }) => {
@@ -44,6 +48,7 @@ export const LiveSearch = ({
     if (key === "ArrowUp") {
       nextCount = (focusedIndex + results.length - 1) % results.length;
     }
+    if (key === "Escape") return closeSearch();
 
     if (key === "Enter") return handleSelection(results[focusedIndex]);
 
@@ -61,16 +66,19 @@ export const LiveSearch = ({
       tabIndex={1}
       onKeyDown={handleKeyDown}
       onBlur={handleOnBlur}
-      className="relative outline-none">
+      className="relative outline-none"
+    >
       <input
         type="text"
+        id={name}
+        name={name}
         className={getInputStyle()}
         placeholder={placeholder}
         onFocus={handleOnFocus}
         value={value}
         onChange={onChange}
-        onBlur={handleOnBlur}
-        onKeyDown={handleKeyDown}
+        // onBlur={handleOnBlur}
+        // onKeyDown={handleKeyDown}
       />
       <SearchResults
         results={results}
@@ -83,7 +91,7 @@ export const LiveSearch = ({
       />
     </div>
   );
-};
+}
 
 // const renderItem = ({ id, name, avatar }) => {
 //   return (
@@ -106,7 +114,6 @@ const SearchResults = ({
   const resultContainer = useRef();
 
   useEffect(() => {
-    console.log(resultContainer);
     resultContainer.current?.scrollIntoView({
       behavior: "smooth",
       block: "center",
@@ -125,7 +132,6 @@ const SearchResults = ({
         };
         return (
           <ResultCard
-            ref={index === focusedIndex ? resultContainer : null}
             key={index.toString()}
             item={result}
             renderItem={renderItem}
@@ -142,7 +148,6 @@ const SearchResults = ({
 };
 
 const ResultCard = forwardRef((props, ref) => {
-  console.log(ref);
   const {
     item,
     renderItem,
