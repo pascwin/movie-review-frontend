@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
-export const TagsInput = ({ name, onChange }) => {
+export const TagsInput = ({ name, value, onChange }) => {
   const [tag, setTag] = useState("");
   const [tags, setTags] = useState([]);
 
@@ -11,11 +11,9 @@ export const TagsInput = ({ name, onChange }) => {
   const handleOnChange = ({ target }) => {
     const { value } = target;
     if (value !== ",") setTag(value);
-  };
 
-  useEffect(() => {
     onChange(tags);
-  }, [tags, onChange]);
+  };
 
   const handleKeyDown = ({ key }) => {
     if (key === "," || key === "Enter") {
@@ -55,15 +53,24 @@ export const TagsInput = ({ name, onChange }) => {
   };
 
   useEffect(() => {
+    if (value.length) setTags(value);
+  }, [value]);
+
+  useEffect(() => {
     input.current?.scrollIntoView();
   }, [tag]);
+
+  useEffect(() => {
+    onChange(tags);
+  }, [tags, onChange]);
 
   return (
     <div>
       <div
         ref={tagsInput}
         onKeyDown={handleKeyDown}
-        className="border-2 bg-transparent dark:border-dark-subtle border-light-subtle px-2 h-10 rounded w-full text-white flex items-center space-x-2 overflow-x-auto custom-scroll-bar transition">
+        className="border-2 bg-transparent dark:border-dark-subtle border-light-subtle px-2 h-10 rounded w-full text-white flex items-center space-x-2 overflow-x-auto custom-scroll-bar transition"
+      >
         {tags.map((t) => (
           <Tag onClick={() => removeTag(t)} key={t}>
             {t}
@@ -83,7 +90,7 @@ export const TagsInput = ({ name, onChange }) => {
       </div>
     </div>
   );
-};
+}
 
 const Tag = ({ children, onClick }) => {
   return (

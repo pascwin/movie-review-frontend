@@ -1,5 +1,10 @@
 import React, { useState, useCallback } from "react";
 import { useNotification } from "../../hooks";
+import {
+  languageOptions,
+  statusOptions,
+  typeOptions,
+} from "../../utils/options";
 import { commonInputClasses } from "../../utils/theme";
 import { CastForm } from "../form/CastForm";
 import { Submit } from "../form/Submit";
@@ -7,6 +12,10 @@ import { LiveSearch } from "../LiveSearch";
 import { CastModal } from "../models/CastModal";
 import { WritersModal } from "../models/WritersModal";
 import { TagsInput } from "../TagsInput";
+import { PosterSelector } from "../PosterSelector";
+import { Selector } from "../Selector";
+import { GenresSelector } from "../GenresSelector";
+import { GenresModal } from "../models/GenresModal";
 
 export const results = [
   {
@@ -62,7 +71,7 @@ const defaultMovieInfo = {
   tags: [],
   cast: [],
   director: {
-    name: ""
+    name: "",
   },
   writers: [],
   releseDate: "",
@@ -77,6 +86,8 @@ export const MovieForm = () => {
   const [movieInfo, setMovieInfo] = useState({ ...defaultMovieInfo });
   const [showWritersModal, setShowWritersModal] = useState(false);
   const [showCastModal, setShowCastModal] = useState(false);
+  const [selectedPosterForUI, setSelectedPosterForUI] = useState("");
+  const [showGenresModal, setShowGenresModal] = useState(false);
 
   const { updateNotification } = useNotification();
 
@@ -85,8 +96,18 @@ export const MovieForm = () => {
     console.log(movieInfo);
   };
 
+  const updatePosterForUI = (file) => {
+    const url = URL.createObjectURL(file);
+    setSelectedPosterForUI(url);
+  };
+
   const handleChange = ({ target }) => {
-    const { value, name } = target;
+    const { value, name, files } = target;
+    if (name === "poster") {
+      const poster = files[0];
+      updatePosterForUI(poster);
+      return setMovieInfo({ ...movieInfo, poster });
+    }
 
     setMovieInfo({ ...movieInfo, [name]: value });
   };
@@ -104,6 +125,10 @@ export const MovieForm = () => {
   const updateCast = (castInfo) => {
     const { cast } = movieInfo;
     setMovieInfo({ ...movieInfo, cast: [...cast, castInfo] });
+  };
+
+  const updateGenres = (genres) => {
+    setMovieInfo({ ...movieInfo, genres });
   };
 
   const updateWriters = (profile) => {
@@ -135,6 +160,14 @@ export const MovieForm = () => {
     setShowCastModal(true);
   };
 
+  const hideGenresModal = () => {
+    setShowGenresModal(false);
+  };
+
+  const displayGenresModal = () => {
+    setShowGenresModal(true);
+  };
+
   const handleWriterRemove = (profileId) => {
     const { writers } = movieInfo;
     const newWriters = writers.filter(({ id }) => id !== profileId);
@@ -149,7 +182,19 @@ export const MovieForm = () => {
     setMovieInfo({ ...movieInfo, cast: [...newCast] });
   };
 
-  const { title, storyLine, director, writers, cast } = movieInfo;
+  const {
+    title,
+    storyLine,
+    director,
+    writers,
+    cast,
+    tags,
+    releseDate,
+    genres,
+    type,
+    language,
+    status,
+  } = movieInfo;
 
   return (
     <>
@@ -183,7 +228,7 @@ export const MovieForm = () => {
 
           <div>
             <Label htmlFor="tags">Tags</Label>
-            <TagsInput name="tags" onChange={updateTags} />
+            <TagsInput value={tags} name="tags" onChange={updateTags} />
           </div>
 
           <div className="">
@@ -215,7 +260,6 @@ export const MovieForm = () => {
               placeholder="Search profile"
               renderItem={renderItem}
               onSelect={updateWriters}
-              value={writers[0]?.name}
             />
           </div>
 
@@ -231,9 +275,47 @@ export const MovieForm = () => {
             <CastForm onSubmit={updateCast} />
           </div>
 
+          <input
+            type="date"
+            className={commonInputClasses + " border-2 rounded p-1 w-auto"}
+            onChange={handleChange}
+            name="releseDate"
+            value={releseDate}
+          />
+
           <Submit value="Upload" onClick={handleSubmit} type="button" />
         </div>
-        <div className="w-[30%] h-5 bg-blue-400"></div>
+        <div className="w-[30%] space-y-5">
+          <PosterSelector
+            name="poster"
+            onChange={handleChange}
+            selectedPoster={selectedPosterForUI}
+            accept="image/jpg, image/jpeg, image/png"
+          />
+          <GenresSelector badge={genres.length} onClick={displayGenresModal} />
+
+          <Selector
+            onChange={handleChange}
+            name="type"
+            value={type}
+            options={typeOptions}
+            label="Type"
+          />
+          <Selector
+            onChange={handleChange}
+            name="language"
+            value={language}
+            options={languageOptions}
+            label="Language"
+          />
+          <Selector
+            onChange={handleChange}
+            name="status"
+            value={status}
+            options={statusOptions}
+            label="Status"
+          />
+        </div>
       </div>
 
       <WritersModal
@@ -248,6 +330,12 @@ export const MovieForm = () => {
         casts={cast}
         visible={showCastModal}
         onRemoveClick={handleCastRemove}
+      />
+      <GenresModal
+        onSubmit={updateGenres}
+        visible={showGenresModal}
+        onClose={hideGenresModal}
+        previousSelection={genres}
       />
     </>
   );
