@@ -33,3 +33,14 @@ const App = () => {
 };
 
 export default App;
+
+
+// useEffect(() => {
+//   onChange(tags);
+// }, [tags, onChange]);
+
+// const updateTags = useCallback((tags) => {
+//   setMovieInfo((m) => {
+//     return { ...m, tags };
+//   });
+// }, []);
