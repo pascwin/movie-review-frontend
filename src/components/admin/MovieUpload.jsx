@@ -3,9 +3,10 @@ import { FileUploader } from "react-drag-drop-files";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { uploadTrailer } from "../../api/movie";
 import { useNotification } from "../../hooks";
+import { ModalContainer } from "../models/ModalContainer";
 import { MovieForm } from "./MovieForm";
 
-export const MovieUpload = () => {
+export const MovieUpload = ({ visible, onClose }) => {
   const [videoSelected, setVideoSelected] = useState(false);
   const [videoUploaded, setVideoUploaded] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -46,7 +47,7 @@ export const MovieUpload = () => {
     );
     if (error) return updateNotification("error", error);
     setVideoUploaded(true);
-    console.log(url, public_id)
+    console.log(url, public_id);
     setVideoInfo({ url, public_id });
   };
 
@@ -61,11 +62,8 @@ export const MovieUpload = () => {
   };
 
   return (
-    <div
-      className="fixed inset-0 dark:bg-white dark:bg-opacity-50 
-      bg-primary bg-opacity-50 backdrop-blur-sm flex items-center justify-center">
-      <div className="dark:bg-primary bg-white rounded w-[45rem] h-[40rem] overflow-auto p-2 custom-scroll-bar">
-        {/* <UploadProgress
+    <ModalContainer visible={visible} onClose={onClose}>
+      {/* <UploadProgress
           visible={!videoUploaded && videoSelected}
           message={getUploadProgressValue()}
           width={uploadProgress}
@@ -75,9 +73,8 @@ export const MovieUpload = () => {
           onTypeError={handleTypeError}
           handleChange={handleChange}
         /> */}
-        <MovieForm />
-      </div>
-    </div>
+      <MovieForm />
+    </ModalContainer>
   );
 };
 
