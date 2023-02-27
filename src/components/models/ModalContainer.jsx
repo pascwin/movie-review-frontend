@@ -7,7 +7,7 @@ export const ModalContainer = ({
   onClose,
 }) => {
   const handleClick = (e) => {
-    if (e.target.id === "modal-container") onClose();
+    if (e.target.id === "modal-container") onClose && onClose();
   };
 
   const renderChildren = () => {

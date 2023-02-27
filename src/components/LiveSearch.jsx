@@ -12,13 +12,14 @@ export const LiveSearch = ({
   renderItem = null,
   onChange = () => {},
   onSelect = null,
+  visible,
 }) => {
   const [displaySearch, setDisplaySearch] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  const [defaultValue, setDefaultValue] = useState("")
+  const [defaultValue, setDefaultValue] = useState("");
 
   const handleOnFocus = () => {
-    if (results.length) setDisplaySearch(true);
+    if (results?.length) setDisplaySearch(true);
   };
 
   const closeSearch = () => {
@@ -64,12 +65,17 @@ export const LiveSearch = ({
 
   const handleChange = (event) => {
     setDefaultValue(event.target.value);
-    onChange && onChange(event)
-  }
+    onChange && onChange(event);
+  };
 
   useEffect(() => {
-    if (value) setDefaultValue(value)
-  }, [value])
+    setDefaultValue(value);
+  }, [value]);
+
+  useEffect(() => {
+    if (results.length) return setDisplaySearch(true);
+    setDisplaySearch(false);
+  }, [results.length]);
 
   return (
     <div
@@ -101,7 +107,7 @@ export const LiveSearch = ({
       />
     </div>
   );
-}
+};
 
 // const renderItem = ({ id, name, avatar }) => {
 //   return (

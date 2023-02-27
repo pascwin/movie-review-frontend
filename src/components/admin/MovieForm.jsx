@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
-import { useNotification } from "../../hooks";
+import { searchActor } from "../../api/actor";
+import { useNotification, useSearch } from "../../hooks";
 import {
   languageOptions,
   statusOptions,
@@ -8,7 +9,8 @@ import {
 import { commonInputClasses } from "../../utils/theme";
 import { CastForm } from "../form/CastForm";
 import { Submit } from "../form/Submit";
-import { LiveSearch } from "../LiveSearch";
+import { Label } from "../Label";
+import { LabelWithBadge } from "../LabelWithBadge";
 import { CastModal } from "../models/CastModal";
 import { WritersModal } from "../models/WritersModal";
 import { TagsInput } from "../TagsInput";
@@ -16,6 +18,9 @@ import { PosterSelector } from "../PosterSelector";
 import { Selector } from "../Selector";
 import { GenresSelector } from "../GenresSelector";
 import { GenresModal } from "../models/GenresModal";
+import { ViewAllBtn } from "../ViewAllButton";
+import { DirectorSelector } from "../DirectorSelector";
+import { WriterSelector } from "../WriterSelector";
 
 export const results = [
   {
@@ -90,6 +95,7 @@ export const MovieForm = () => {
   const [showGenresModal, setShowGenresModal] = useState(false);
 
   const { updateNotification } = useNotification();
+  const { handleSearch, results, resetSearch } = useSearch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -182,6 +188,11 @@ export const MovieForm = () => {
     setMovieInfo({ ...movieInfo, cast: [...newCast] });
   };
 
+  const handleProfileChange = ({ target }) => {
+    setMovieInfo({ ...movieInfo, director: { name: target.value } });
+    handleSearch(searchActor, target.value);
+  };
+
   const {
     title,
     storyLine,
@@ -195,6 +206,8 @@ export const MovieForm = () => {
     language,
     status,
   } = movieInfo;
+
+  console.log(results);
 
   return (
     <>
@@ -231,17 +244,7 @@ export const MovieForm = () => {
             <TagsInput value={tags} name="tags" onChange={updateTags} />
           </div>
 
-          <div className="">
-            <Label htmlFor="director">Director</Label>
-            <LiveSearch
-              name="director"
-              results={results}
-              placeholder="Search profile"
-              renderItem={renderItem}
-              onSelect={updateDirector}
-              value={director.name}
-            />
-          </div>
+          <DirectorSelector onSelect={updateDirector} />
 
           <div className="">
             <div className="flex justify-between">
@@ -254,13 +257,7 @@ export const MovieForm = () => {
                 View All
               </ViewAllBtn>
             </div>
-            <LiveSearch
-              name="writers"
-              results={results}
-              placeholder="Search profile"
-              renderItem={renderItem}
-              onSelect={updateWriters}
-            />
+            <WriterSelector onSelect={updateWriters} />
           </div>
 
           <div>
@@ -338,45 +335,5 @@ export const MovieForm = () => {
         previousSelection={genres}
       />
     </>
-  );
-};
-
-const Label = ({ children, htmlFor }) => {
-  return (
-    <label
-      htmlFor={htmlFor}
-      className="dark:text-dark-subtle text-light-subtle font-semibold">
-      {children}
-    </label>
-  );
-};
-
-const LabelWithBadge = ({ children, htmlFor, badge = 0 }) => {
-  const renderBadge = () => {
-    if (!badge) return null;
-    return (
-      <span className="dark:bg-dark-subtle bg-light-subtle text-white absolute top-0 right-0 translate-x-2 -translate-y-1 text-xs w-5 h-5 rounded-full flex justify-center items-center">
-        {badge <= 9 ? badge : "9+"}
-      </span>
-    );
-  };
-
-  return (
-    <div className="relative">
-      <Label htmlFor={htmlFor}>{children}</Label>
-      {renderBadge()}
-    </div>
-  );
-};
-
-const ViewAllBtn = ({ visible, children, onClick }) => {
-  if (!visible) return null;
-  return (
-    <button
-      onClick={onClick}
-      type="button"
-      className="dark:text-white text-primary hover:underline transition">
-      {children}
-    </button>
   );
 };

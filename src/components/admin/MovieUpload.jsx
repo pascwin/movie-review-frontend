@@ -62,7 +62,7 @@ export const MovieUpload = ({ visible, onClose }) => {
   };
 
   return (
-    <ModalContainer visible={visible} onClose={onClose}>
+    <ModalContainer visible={visible}>
       {/* <UploadProgress
           visible={!videoUploaded && videoSelected}
           message={getUploadProgressValue()}
