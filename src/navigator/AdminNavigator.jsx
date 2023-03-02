@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import { Actors } from "../components/admin/Actors";
+import Actors from "../components/admin/Actors";
 import { Dashboard } from "../components/admin/Dashboard";
 import { Header } from "../components/admin/Header";
 import { Movies } from "../components/admin/Movies";
