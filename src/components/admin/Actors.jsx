@@ -85,13 +85,13 @@ export default function Actors() {
   };
 
   const handleOnDeleteConfirm = async () => {
-    // setBusy(true);
-    // const { error, message } = await deleteActor(selectedProfile.id);
-    // setBusy(false);
-    // if (error) return updateNotification("error", error);
-    // updateNotification("success", message);
-    // hideConfirmModal();
-    // fetchActors(currentPageNo);
+    setBusy(true);
+    const { error, message } = await deleteActor(selectedProfile.id);
+    setBusy(false);
+    if (error) return updateNotification("error", error);
+    updateNotification("success", message);
+    hideConfirmModal();
+    fetchActors(currentPageNo);
   };
 
   const hideConfirmModal = () => setShowConfirmModal(false);
@@ -161,8 +161,9 @@ export default function Actors() {
   );
 }
 
-const ActorProfile = ({ profile, onEditClick }) => {
+const ActorProfile = ({ profile, onEditClick, onDeleteClick }) => {
   const [showOptions, setShowOptions] = useState(false);
+  const acceptedNameLength = 15;
 
   const handleOnMouseEnter = () => {
     setShowOptions(true);
@@ -175,6 +176,12 @@ const ActorProfile = ({ profile, onEditClick }) => {
   const { name, about = "", avatar } = profile;
 
   if (!profile) return null;
+
+  const getName = (name) => {
+    if (name.length <= acceptedNameLength) return name;
+
+    return name.substring(0, acceptedNameLength) + "..";
+  };
 
   return (
     <div className="bg-white shadow dark:shadow dark:bg-secondary rounded h-20 overflow-hidden">
@@ -190,14 +197,19 @@ const ActorProfile = ({ profile, onEditClick }) => {
         />
 
         <div className="px-2">
-          <h1 className="text-xl text-primary dark:text-white font-semibold">
-            {name}
+          <h1 className="text-xl text-primary dark:text-white font-semibold whitespace-nowrap">
+            {getName(name)}
           </h1>
           <p className="text-primary dark:text-white opacity-70">
             {about.substring(0, 50)}
           </p>
         </div>
-        <Options onEditClick={onEditClick} visible={showOptions} />
+
+        <Options
+          onEditClick={onEditClick}
+          onDeleteClick={onDeleteClick}
+          visible={showOptions}
+        />
       </div>
     </div>
   );
