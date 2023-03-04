@@ -11,35 +11,31 @@ export const Header = ({ onAddMovieClick, onAddActorClick }) => {
     { title: "Add Actor", onClick: onAddActorClick },
   ];
   return (
-    <div className="flex items-center justify-between relative">
+    <div className="flex items-center justify-between relative p-5">
       <input
         type="text"
-        className="border-2 dark:border-dark-subtle border-light-subtle dark:focus:border-white focus:border-primary
-        dark:text-white transition bg-transparent rounded text-lg p-1 outline-none"
+        className="border-2 dark:border-dark-subtle border-light-subtle dark:focus:border-white focus:border-primary dark:text-white transition bg-transparent rounded text-lg p-1 outline-none"
         placeholder="Search Movies..."
       />
 
       <div className="flex items-center space-x-3">
         <button
           onClick={toggleTheme}
-          className="dark:text-white text-light-subtle">
+          className="dark:text-white text-light-subtle"
+        >
           <BsFillSunFill size={24} />
         </button>
         <button
-          onClick={() => {
-            setShowOptions(true);
-          }}
-          className="flex items-center space-x-2 border-light-subtle
-           text-light-subtle dark:border-dark-subtle dark:text-dark-subtle
-            transition font-semibold border-2 rounded text-lg px-3 py-1 hover:opacity-80">
+          onClick={() => setShowOptions(true)}
+          className="flex items-center space-x-2 dark:border-dark-subtle border-light-subtle dark:text-dark-subtle text-light-subtle hover:opacity-80 transition font-semibold border-2 rounded text-lg px-3 py-1"
+        >
           <span>Create</span>
           <AiOutlinePlus />
         </button>
+
         <CreateOptions
           visible={showOptions}
-          onClose={() => {
-            setShowOptions(false);
-          }}
+          onClose={() => setShowOptions(false)}
           options={options}
         />
       </div>
