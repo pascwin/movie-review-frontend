@@ -17,6 +17,9 @@ export const createActor = async (formData) => {
 };
 
 export const updateActor = async (id, formData) => {
+  for (var key of formData.entries()) {
+    console.log(key[0] + ', ' + key[1]);
+  }
   const token = getToken();
   try {
     const { data } = await client.post("/actor/update/" + id, formData, {

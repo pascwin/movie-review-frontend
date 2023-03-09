@@ -4,7 +4,7 @@ import { AiOutlineCloudUpload } from "react-icons/ai";
 import { useNotification } from "../../hooks";
 import { uploadMovie, uploadTrailer } from "../../api/movie";
 import { ModalContainer } from "../models/ModalContainer";
-import { MovieForm } from "./MovieForm";
+import { MovieForm } from "../form/MovieForm";
 
 export const MovieUpload = ({ visible, onClose }) => {
   const [videoSelected, setVideoSelected] = useState(false);
@@ -73,7 +73,7 @@ export const MovieUpload = ({ visible, onClose }) => {
           handleChange={handleChange}
         />
       ) : (
-        <MovieForm busy={busy} onSubmit={!busy ? handleSubmit : null} />
+        <MovieForm busy={busy} onSubmit={!busy ? handleSubmit : null} btnTitle="Upload" />
       )}
     </ModalContainer>
   );

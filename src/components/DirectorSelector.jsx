@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { searchActor } from "../api/actor";
 import { useSearch } from "../hooks";
 import { renderItem } from "../utils/helper";
 import { Label } from "./Label.jsx";
 import { LiveSearch } from "./LiveSearch";
 
-export const DirectorSelector = ({ onSelect }) => {
+export const DirectorSelector = ({ onSelect, initalProfile }) => {
   const [value, setValue] = useState("");
   const [profiles, setProfiles] = useState([]);
 
@@ -25,6 +25,13 @@ export const DirectorSelector = ({ onSelect }) => {
   };
 
   console.log(profiles)
+
+  useEffect(() => {
+    if(initalProfile) {
+      setValue(initalProfile.name)
+      onSelect(initalProfile)
+    }
+  }, [initalProfile])
 
   return (
     <div>
