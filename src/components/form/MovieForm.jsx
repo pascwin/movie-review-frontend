@@ -223,6 +223,7 @@ export const MovieForm = ({ busy, btnTitle, initialState, onSubmit }) => {
   } = movieInfo;
 
   console.log(results);
+  console.log(writers)
 
   return (
     <>
@@ -268,7 +269,7 @@ export const MovieForm = ({ busy, btnTitle, initialState, onSubmit }) => {
               </LabelWithBadge>
               <ViewAllBtn
                 onClick={displayWritersModal}
-                visible={writers.length}>
+                visible={writers?.length}>
                 View All
               </ViewAllBtn>
             </div>

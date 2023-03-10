@@ -3,7 +3,6 @@ import {
   deleteMovie,
   getMovieForUpdate,
   getMovies,
-  updateMovie,
 } from "../../api/movie";
 import { useNotification } from "../../hooks";
 import ConfirmModal from "../models/ConfirmModal";
