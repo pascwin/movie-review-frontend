@@ -8,6 +8,7 @@ import { MovieUpload } from "../components/admin/MovieUpload";
 import { Navbar } from "../components/admin/Navbar";
 import { NotFound } from "../components/NotFound";
 import { ActorUpload } from "../components/models/ActorUpload";
+import SearchMovies from "../components/admin/SearchMovies";
 
 export const AdminNavigator = () => {
   const [showMovieUploadModal, setShowMovieUploadModal] = useState(false);
@@ -42,6 +43,7 @@ export const AdminNavigator = () => {
             <Route path="/" element={<Dashboard />} />
             <Route path="/movies" element={<Movies />} />
             <Route path="/actors" element={<Actors />} />
+            <Route path="/search" element={<SearchMovies />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

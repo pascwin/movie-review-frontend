@@ -1,20 +1,31 @@
 import React, { useEffect, useState, useRef } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import { BsFillSunFill } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../hooks";
+import AppSearchForm from "../form/AppSearchForm";
 
 export const Header = ({ onAddMovieClick, onAddActorClick }) => {
   const [showOptions, setShowOptions] = useState(false);
   const { toggleTheme } = useTheme();
+
+  const navigate = useNavigate()
+
   const options = [
     { title: "Add Movie", onClick: onAddMovieClick },
     { title: "Add Actor", onClick: onAddActorClick },
   ];
+
+  const handleSearchSubmit = (query) => {
+    if (!query.trim()) return;
+
+    navigate("/search?title=" + query);
+  };
+
   return (
     <div className="flex items-center justify-between relative p-5">
-      <input
-        type="text"
-        className="border-2 dark:border-dark-subtle border-light-subtle dark:focus:border-white focus:border-primary dark:text-white transition bg-transparent rounded text-lg p-1 outline-none"
+      <AppSearchForm
+        onSubmit={handleSearchSubmit}
         placeholder="Search Movies..."
       />
 

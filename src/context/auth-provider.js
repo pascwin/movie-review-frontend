@@ -1,4 +1,5 @@
-import React, { createContext, useCallback, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState, useCallback } from "react";
+
 import { useNavigate } from "react-router-dom";
 import { getIsAuth, signInUser } from "../api/auth";
 import { useNotification } from "../hooks";
@@ -14,8 +15,8 @@ const defaultAuthInfo = {
 
 export const AuthProvider = ({ children }) => {
   const [authInfo, setAuthInfo] = useState({ ...defaultAuthInfo });
-  const [alreadyLoggedIn, setAlreadyLoggedIn] = useState(false);
   const { updateNotification } = useNotification();
+
   const navigate = useNavigate();
 
   const handleLogin = async (email, password) => {
@@ -23,36 +24,33 @@ export const AuthProvider = ({ children }) => {
     const { error, user } = await signInUser({ email, password });
     if (error) {
       updateNotification("error", error);
-      return setAuthInfo({ ...authInfo, istPending: false, error });
+      return setAuthInfo({ ...authInfo, isPending: false, error });
     }
+
+    navigate("/", { replace: true });
     setAuthInfo({
       profile: { ...user },
       isPending: false,
-      error: "",
       isLoggedIn: true,
+      error: "",
     });
-    // we will use this auth token to fetch our user from the backend api
-    localStorage.setItem("auth-token", user.token);
-  };
 
-  const handleLogout = () => {
-    localStorage.removeItem("auth-token");
-    setAuthInfo({ ...defaultAuthInfo });
-    setAlreadyLoggedIn(false)
+    localStorage.setItem("auth-token", user.token);
   };
 
   const isAuth = useCallback(async () => {
     const token = localStorage.getItem("auth-token");
     if (!token) return;
-    const { error, user } = await getIsAuth(token);
 
+    setAuthInfo(a => {
+      return { ...a, isPending: true }
+    })
+    const { error, user } = await getIsAuth(token);
     if (error) {
       updateNotification("error", error);
-      return setAuthInfo((a) => ({ ...a, istPending: false, error }));
-    }
-    if (!alreadyLoggedIn) {
-      setAlreadyLoggedIn(true);
-      navigate("/", { replace: true });
+      return setAuthInfo(a => {
+        return { ...a, isPending: false, error }
+      })
     }
 
     setAuthInfo({
@@ -61,16 +59,23 @@ export const AuthProvider = ({ children }) => {
       isPending: false,
       error: "",
     });
-  }, [updateNotification, alreadyLoggedIn, navigate]);
+  }, [updateNotification]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("auth-token");
+    setAuthInfo({ ...defaultAuthInfo });
+  };
 
   useEffect(() => {
     isAuth();
-  }, [isAuth, authInfo.isLoggedIn]);
+  }, [isAuth]);
 
+  //  handleLogout
   return (
     <AuthContext.Provider
-      value={{ authInfo, handleLogin, handleLogout, isAuth }}>
+      value={{ authInfo, handleLogin, handleLogout, isAuth }}
+    >
       {children}
     </AuthContext.Provider>
   );
-};
+}
