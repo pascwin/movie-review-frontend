@@ -4,6 +4,7 @@ import {
   getMovieForUpdate,
   getMovies,
 } from "../../api/movie";
+import { useMovies } from "../../hooks";
 import { useNotification } from "../../hooks";
 import ConfirmModal from "../models/ConfirmModal";
 import UpdateMovie from "../models/UpdateMovie";
@@ -23,17 +24,24 @@ export const Movies = () => {
 
   const { updateNotification } = useNotification();
 
-  const fetchMovies = async (pageNo) => {
-    const { error, movies } = await getMovies(pageNo, limit);
-    if (error) updateNotification("error", error);
+  const {
+    fetchMovies,
+    movies: newMovies,
+    fetchPrevPage,
+    fetchNextPage,
+  } = useMovies();
 
-    if (!movies.length) {
-      currentPageNo = pageNo - 1;
-      return setReachedToEnd(true);
-    }
+  // const fetchMovies = async (pageNo) => {
+  //   const { error, movies } = await getMovies(pageNo, limit);
+  //   if (error) updateNotification("error", error);
 
-    setMovies([...movies]);
-  };
+  //   if (!movies.length) {
+  //     currentPageNo = pageNo - 1;
+  //     return setReachedToEnd(true);
+  //   }
+
+  //   setMovies([...movies]);
+  // };
 
   const handleOnNextClick = () => {
     if (reachedToEnd) return;
@@ -93,7 +101,7 @@ export const Movies = () => {
   return (
     <>
       <div className="space-y-3 p-5">
-        {movies.map((movie) => {
+        {newMovies?.map((movie) => {
           return (
             <MovieListItem
               key={movie.id}
@@ -106,8 +114,8 @@ export const Movies = () => {
 
         <NextAndPrevButton
           className="mt-5"
-          onNextClick={handleOnNextClick}
-          onPrevClick={handleOnPrevClick}
+          onNextClick={fetchNextPage}
+          onPrevClick={fetchPrevPage}
         />
       </div>
 
