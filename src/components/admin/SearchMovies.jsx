@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { searchMovieForAdmin } from "../../api/movie";
 import { useNotification } from "../../hooks";
@@ -14,7 +14,7 @@ export default function SearchMovies() {
 
   const { updateNotification } = useNotification();
 
-  const searchMovies = useCallback(async (val) => {
+  const searchMovies = async (val) => {
     const { error, results } = await searchMovieForAdmin(val);
     if (error) return updateNotification("error", error);
 
@@ -25,18 +25,39 @@ export default function SearchMovies() {
 
     setResultNotFound(false);
     setMovies([...results]);
-  }, [updateNotification]);
+  };
+
+  const handleAfterDelete = (movie) => {
+    const updatedMovies = movies.filter((m) => m.id !== movie.id);
+    setMovies([...updatedMovies]);
+  };
+
+  const handleAfterUpdate = (movie) => {
+    console.log("run");
+    const updatedMovies = movies.map((m) => {
+      if (m.id === movie.id) return movie;
+      return m;
+    });
+    setMovies([...updatedMovies]);
+  };
 
   useEffect(() => {
     if (query.trim()) searchMovies(query);
-  }, [query, searchMovies]);
+  }, [query]);
 
   return (
     <div className="p-5 space-y-3">
       <NotFoundText text="Record not found!" visible={resultNotFound} />
       {!resultNotFound &&
         movies.map((movie) => {
-          return <MovieListItem movie={movie} key={movie.id} />;
+          return (
+            <MovieListItem
+              movie={movie}
+              key={movie.id}
+              afterDelete={handleAfterDelete}
+              afterUpdate={handleAfterUpdate}
+            />
+          );
         })}
     </div>
   );
